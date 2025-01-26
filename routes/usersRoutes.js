@@ -1,5 +1,6 @@
 import express from "express";
 import users from "../data/users.js";
+import validateRequest from "../middleware/validateRequest.js";
 const router = express.Router();
 
 // get all users
@@ -9,23 +10,15 @@ router
     res.json(users);
   })
   // add a user
-  .post((req, res, next) => {
-    const { name, email, role } = req.body;
-    if (name && email && role) {
-      const user = users.find((user) => user.email === req.body.email);
-      if (user) res.send("User Already registered with this email");
-      const newUser = {
-        id: new Date().getTime(),
-        ...req.body,
-      };
-      users.push(newUser);
-      res.status(201).json(newUser);
-    } else {
-      res.json({
-        error: "user not added, please fill all the required fields",
-      });
-      next();
-    }
+  .post(validateRequest(["name", "email", "role"]), (req, res) => {
+    const user = users.find((user) => user.email === req.body.email);
+    if (user) res.send("User Already registered with this email");
+    const newUser = {
+      id: new Date().getTime(),
+      ...req.body,
+    };
+    users.push(newUser);
+    res.status(201).json(newUser);
   });
 
 // get a user by id
@@ -35,31 +28,24 @@ router
     const user = users.find((user) => user.id === +req.params.id);
     user ? res.json(user) : res.status(404).send("User Not Found");
   })
-  .put((req, res, next) => {
-    const { name, email, role } = req.body;
+  .put(validateRequest(["name", "email", "role"]), (req, res, next) => {
     const user = users.find((user) => user.id === +req.params.id);
     if (user) {
-      if (name && email && role) {
-        Object.assign(user, req.body);
-        res.json(user);
-      } else {
-        res.json({ error: "user not updated please fill required fields" });
-      }
+      Object.assign(user, req.body);
+      res.json(user);
     } else {
       res.status(404).json({ message: "user not found" });
       next();
     }
   })
-  .delete((req,res) => {
-    const index = users.findIndex(user => user.id === +req.params.id)
+  .delete((req, res) => {
+    const index = users.findIndex((user) => user.id === +req.params.id);
     if (index !== -1) {
-        users.splice(index, 1);
-        res.json({message : "User Deleted Successfully"})
+      users.splice(index, 1);
+      res.json({ message: "User Deleted Successfully" });
     } else {
-        res.status(404).json({ message: "user not found" });
+      res.status(404).json({ message: "user not found" });
     }
   });
 
-
 export default router;
-
