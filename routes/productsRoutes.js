@@ -26,7 +26,10 @@ router
         (product) => product.price <= parseFloat(req.query.maxPrice)
       );
     }
-    res.json(filteredProducts)
+    res.json(filteredProducts);
+  })
+  .post((req, res, next) => {
+    
   });
 
 export default router;
