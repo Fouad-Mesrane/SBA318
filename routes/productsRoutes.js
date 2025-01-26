@@ -1,5 +1,6 @@
 import express from "express";
 import products from "../data/products.js";
+import validateRequest from "../middleware/validateRequest.js";
 const router = express.Router();
 
 router
@@ -28,8 +29,23 @@ router
     }
     res.json(filteredProducts);
   })
-  .post((req, res, next) => {
-    
-  });
+  .post(
+    validateRequest(["name", "price", "category", "stock"]),
+    (req, res, next) => {
+      const newProduct = {
+        id: new Date().getTime(),
+        ...req.body,
+      };
+
+      products.push(newProduct);
+      res.json(newProduct);
+    }
+  );
+
+// get product by id
+router.route("/:id").get((req, res) => {
+  const product = products.find((p) => p.id === parseInt(req.params.id));
+  product ? res.json(product) : res.status(404).send("Product not found");
+});
 
 export default router;
