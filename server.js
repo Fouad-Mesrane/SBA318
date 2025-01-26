@@ -19,8 +19,11 @@ app.set("view engine", "ejs")
 // routes
 
 import userRoutes from "./routes/usersRoutes.js"
+import productsRoutes from "./routes/productsRoutes.js"
+
 
 app.use('/api/users', userRoutes);
+app.use('/api/products',productsRoutes );
 
 
 
