@@ -15,7 +15,7 @@ router
       const user = users.find((user) => user.email === req.body.email);
       if (user) res.send("User Already registered with this email");
       const newUser = {
-        id: users.length + 1,
+        id: new Date().getTime(),
         ...req.body,
       };
       users.push(newUser);
@@ -49,6 +49,17 @@ router
       res.status(404).json({ message: "user not found" });
       next();
     }
+  })
+  .delete((req,res) => {
+    const index = users.findIndex(user => user.id === +req.params.id)
+    if (index !== -1) {
+        users.splice(index, 1);
+        res.json({message : "User Deleted Successfully"})
+    } else {
+        res.status(404).json({ message: "user not found" });
+    }
   });
 
+
 export default router;
+
