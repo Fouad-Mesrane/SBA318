@@ -1,5 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
+import path from "path"
 import logger from "./middleware/logger";
 import errorHandler from "./middleware/errorHandler";
 
@@ -9,12 +10,13 @@ const PORT = 3000;
 
 
 
-
+//middlewares
 app.use(bodyParser.json())
-// logger middleware to log requests
 app.use(logger)
-
-
+app.use(express.static("public"));
+app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, 'views'))
+// routes
 
 
 
