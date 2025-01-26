@@ -42,10 +42,30 @@ router
     }
   );
 
-// get product by id
-router.route("/:id").get((req, res) => {
-  const product = products.find((p) => p.id === parseInt(req.params.id));
-  product ? res.json(product) : res.status(404).send("Product not found");
-});
+// get product by id and update and delete
+router
+  .route("/:id")
+  .get((req, res) => {
+    const product = products.find((p) => p.id === parseInt(req.params.id));
+    product ? res.json(product) : res.status(404).send("Product not found");
+  })
+  .put(validateRequest(["name", "price", "category", "stock"]), (req, res) => {
+    const product = products.find((p) => p.id === parseInt(req.params.id));
+    if (product) {
+      Object.assign(product, req.body);
+      res.json(product);
+    } else {
+      res.status(404).send("Product not found");
+    }
+  })
+  .delete((req, res) => {
+    const index = products.findIndex((p) => p.id === parseInt(req.params.id));
+    if (index !== -1) {
+      products.splice(index, 1);
+      res.sendStatus(204);
+    } else {
+      res.status(404).send("Product not found");
+    }
+  });
 
 export default router;
