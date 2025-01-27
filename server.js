@@ -20,10 +20,11 @@ app.set("view engine", "ejs")
 
 import userRoutes from "./routes/usersRoutes.js"
 import productsRoutes from "./routes/productsRoutes.js"
-
+import ordersRoutes from "./routes/ordersRoutes.js"
 
 app.use('/api/users', userRoutes);
 app.use('/api/products',productsRoutes );
+app.use("/api/orders", ordersRoutes)
 
 
 

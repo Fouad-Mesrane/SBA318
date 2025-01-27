@@ -1,6 +1,6 @@
 import express from "express";
-import users from "../data/users.js";
 import validateRequest from "../middleware/validateRequest.js";
+import users from "../data/users.js";
 const router = express.Router();
 
 // get all users
