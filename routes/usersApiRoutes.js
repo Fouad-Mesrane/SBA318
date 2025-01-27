@@ -18,7 +18,7 @@ router
       ...req.body,
     };
     users.push(newUser);
-    res.status(201).json(newUser);
+    res.status(201).redirect("/users");
   });
 
 // get a user by id
