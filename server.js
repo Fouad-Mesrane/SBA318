@@ -12,9 +12,11 @@ const PORT = 3000;
 
 //middlewares
 app.use(bodyParser.json())
+app.use(express.urlencoded({extended : true}))
 app.use(logger)
 app.use(express.static("public"));
 app.set("view engine", "ejs")
+app.set ("views", path.resolve("views"))
 
 // routes
 
@@ -28,6 +30,11 @@ app.use("/api/orders", ordersRoutes)
 
 
 
+
+// Home Route
+app.get('/', (req, res) => {
+    res.render('home'); // Render the homepage
+  });
 
 
 // error handler middleware

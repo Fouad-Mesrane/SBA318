@@ -20,8 +20,12 @@ router
 
 // update orders
 router
-  .route(
-    "/:id",
+  .route("/:id")
+  .get((req, res) => {
+    const order = orders.find((o) => o.id === parseInt(req.params.id));
+    order ? res.json(order) : res.status(404).send("Order not found");
+  })
+  .put(
     validateRequest(["userId", "productId", "quantity", "status"]),
     (req, res) => {
       const order = orders.find((o) => o.id === +req.params.id);
