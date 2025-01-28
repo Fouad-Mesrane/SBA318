@@ -1,51 +1,29 @@
 import express from "express";
-import validateRequest from "../middleware/validateRequest.js";
-import orders from "../data/orders.js";
+import {
+  addOrder,
+  deleteOrder,
+  getOrder,
+  getOrders,
+  updateOrder,
+} from "../controllers/order.js";
 
 const router = express.Router();
 
 router
   .route("/")
-  .get((req, res) => {
-    res.json(orders);
-  })
-  .post(
-    validateRequest(["userId", "productId", "quantity", "status"]),
-    (req, res) => {
-      const newOrder = { id: new Date().getTime(), ...req.body };
-      orders.push(newOrder);
-      res.status(201).json(newOrder);
-    }
-  );
+  // getb all orders
+  .get(getOrders)
+  //add an order
+  .post(addOrder);
 
 // update orders
 router
   .route("/:id")
-  .get((req, res) => {
-    const order = orders.find((o) => o.id === parseInt(req.params.id));
-    order ? res.json(order) : res.status(404).send("Order not found");
-  })
-  .put(
-    validateRequest(["userId", "productId", "quantity", "status"]),
-    (req, res) => {
-      const order = orders.find((o) => o.id === +req.params.id);
-      if (order) {
-        Object.assign(order, req.body);
-        res.json(order);
-      } else {
-        res.status(404).send("Order not found");
-      }
-    }
-  )
+  // get an order
+  .get(getOrder)
+  // update order
+  .put(updateOrder)
   // delete order
-  .delete((req, res) => {
-    const index = orders.findIndex((o) => o.id === parseInt(req.params.id));
-    if (index !== -1) {
-      orders.splice(index, 1);
-      res.sendStatus(204);
-    } else {
-      res.status(404).send("Order not found");
-    }
-  });
+  .delete(deleteOrder);
 
 export default router;
